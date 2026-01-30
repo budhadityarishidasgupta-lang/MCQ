@@ -1,13 +1,9 @@
 import math
 import svgwrite
-from generator import generate_sequence_question
+from generator import generate_question
 
 
 def draw_triangle(dwg, center_x, center_y, size, rotation):
-    """
-    Draws one triangle rotated by 'rotation' degrees
-    """
-
     points = [
         (0, -size),
         (size, size),
@@ -38,19 +34,14 @@ def save_svg(filename, rotation):
     dwg.save()
 
 
-def main():
-    q = generate_sequence_question()
+def render_question(question):
+    """
+    Draw images based on question type
+    """
 
-    # stem image (last shown rotation)
-    save_svg("stem.svg", q["sequence"][-1])
+    # Sequence question → has stem
+    if question["type"] == "sequence":
+        save_svg("stem.svg", question["sequence"][-1])
 
-    # answer options
-    letters = ["a", "b", "c", "d"]
-    for i, rot in enumerate(q["options"]):
-        save_svg(f"opt_{letters[i]}.svg", rot)
-
-    print("Correct option is:", letters[q["correct_index"]])
-
-
-if __name__ == "__main__":
-    main()
+    # Draw options (common)
+    letters =
