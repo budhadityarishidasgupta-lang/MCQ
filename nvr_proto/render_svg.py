@@ -3,7 +3,7 @@ import svgwrite
 from generator import generate_question
 
 
-def draw_triangle(dwg, center_x, center_y, size, rotation):
+def draw_triangle(dwg, cx, cy, size, rotation):
     points = [
         (0, -size),
         (size, size),
@@ -11,16 +11,16 @@ def draw_triangle(dwg, center_x, center_y, size, rotation):
     ]
 
     rad = math.radians(rotation)
-    rotated_points = []
+    rotated = []
 
     for x, y in points:
         rx = x * math.cos(rad) - y * math.sin(rad)
         ry = x * math.sin(rad) + y * math.cos(rad)
-        rotated_points.append((center_x + rx, center_y + ry))
+        rotated.append((cx + rx, cy + ry))
 
     dwg.add(
         dwg.polygon(
-            rotated_points,
+            rotated,
             fill="none",
             stroke="black",
             stroke_width=4
@@ -35,13 +35,17 @@ def save_svg(filename, rotation):
 
 
 def render_question(question):
-    """
-    Draw images based on question type
-    """
-
-    # Sequence question → has stem
+    # If sequence, draw stem
     if question["type"] == "sequence":
         save_svg("stem.svg", question["sequence"][-1])
 
-    # Draw options (common)
-    letters =
+    # Draw options
+    letters = ["a", "b", "c", "d"]
+    for i, rot in enumerate(question["options"]):
+        save_svg(f"opt_{letters[i]}.svg", rot)
+
+
+def main():
+    question = generate_question()
+    render_question(question)
+    return question
