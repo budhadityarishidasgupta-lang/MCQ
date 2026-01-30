@@ -105,6 +105,53 @@ def draw_line_shape(lines, filename):
 
     dwg.save()
 
+def draw_matrix(matrix, filename):
+    """
+    Draws a 3x3 matrix of triangles.
+    One cell may be None (missing).
+    """
+
+    dwg = svgwrite.Drawing(filename, size=("300px", "300px"))
+
+    cell_size = 80
+    start_x = 40
+    start_y = 40
+
+    for row_idx, row in enumerate(matrix):
+        for col_idx, value in enumerate(row):
+            if value is None:
+                continue
+
+            cx = start_x + col_idx * cell_size
+            cy = start_y + row_idx * cell_size
+
+            # reuse triangle logic
+            points = [
+                (0, -20),
+                (20, 20),
+                (-20, 20),
+            ]
+
+            rad = math.radians(value)
+            rotated = []
+
+            for x, y in points:
+                rx = x * math.cos(rad) - y * math.sin(rad)
+                ry = x * math.sin(rad) + y * math.cos(rad)
+                rotated.append((cx + rx, cy + ry))
+
+            dwg.add(
+                dwg.polygon(
+                    rotated,
+                    fill="none",
+                    stroke="black",
+                    stroke_width=3
+                )
+            )
+
+    dwg.save()
+
+
 
 def render_question(question):
 
@@ -128,6 +175,7 @@ def render_question(question):
         letters = ["a", "b", "c", "d"]
         for i, option in enumerate(question["options"]):
             draw_structure_svg(option, f"opt_{letters[i]}.svg")
+   
     elif question["type"] == "hidden_shape":
         # Draw target shape
         draw_line_shape(question["target"], "target.svg")
@@ -136,6 +184,16 @@ def render_question(question):
         letters = ["a", "b", "c", "d"]
         for i, option in enumerate(question["options"]):
             draw_line_shape(option["lines"], f"opt_{letters[i]}.svg")
+    
+    elif question["type"] == "matrix":
+        # Draw the matrix grid
+        draw_matrix(question["matrix"], "matrix.svg")
+
+        # Draw answer options
+        letters = ["a", "b", "c", "d"]
+        for i, rot in enumerate(question["options"]):
+            save_svg(f"opt_{letters[i]}.svg", rot)
+
 
 def main():
     question = generate_question()
