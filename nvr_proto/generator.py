@@ -35,13 +35,14 @@ def generate_odd_one_out_question():
 
 
 def generate_question():
-    """
-    Randomly choose question type
-    """
     return random.choice([
         generate_sequence_question(),
-        generate_odd_one_out_question()
+        generate_odd_one_out_question(),
+        generate_structure_match_question(),
+        generate_hidden_shape_question(),
+        generate_matrix_question()
     ])
+
 
 def generate_structure_match_question():
     """
