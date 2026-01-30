@@ -44,4 +44,4 @@ st.markdown("---")
 
 if st.button("Next Question ▶️"):
     st.session_state.question = main()
-    st.experimental_rerun()
+    st.rerun()
