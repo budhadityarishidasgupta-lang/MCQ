@@ -107,3 +107,59 @@ def generate_structure_match_question():
         "correct_index": correct_index
     }
 
+def generate_hidden_shape_question():
+    """
+    Hidden Shape:
+    Target is an L-shape made of 2 lines
+    """
+
+    # Target shape definition (relative coordinates)
+    target_shape = [
+        ((0, 0), (40, 0)),   # horizontal line
+        ((0, 0), (0, 40)),   # vertical line
+    ]
+
+    # Correct container includes target exactly
+    correct_container = {
+        "lines": target_shape + [
+            ((40, 0), (40, 40)),
+            ((0, 40), (40, 40)),
+        ]
+    }
+
+    # Wrong containers (almost but not exact)
+    wrong_containers = [
+        # Missing one line
+        {
+            "lines": [
+                ((0, 0), (40, 0)),
+                ((40, 0), (40, 40)),
+            ]
+        },
+        # Rotated target (doesn't match)
+        {
+            "lines": [
+                ((0, 0), (0, 40)),
+                ((0, 40), (40, 40)),
+            ]
+        },
+        # Extra misleading lines but missing target
+        {
+            "lines": [
+                ((10, 0), (10, 40)),
+                ((0, 10), (40, 10)),
+            ]
+        }
+    ]
+
+    options = [correct_container] + wrong_containers
+    random.shuffle(options)
+
+    correct_index = options.index(correct_container)
+
+    return {
+        "type": "hidden_shape",
+        "target": target_shape,
+        "options": options,
+        "correct_index": correct_index
+    }
