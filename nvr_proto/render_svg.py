@@ -84,6 +84,27 @@ def draw_structure_svg(structure, filename):
 
     dwg.save()
 
+def draw_line_shape(lines, filename):
+    """
+    Draws a set of straight lines (hidden shape / container)
+    """
+
+    dwg = svgwrite.Drawing(filename, size=("200px", "200px"))
+
+    # Center offset so shapes sit nicely
+    offset_x = 80
+    offset_y = 80
+
+    for (x1, y1), (x2, y2) in lines:
+        dwg.add(dwg.line(
+            start=(x1 + offset_x, y1 + offset_y),
+            end=(x2 + offset_x, y2 + offset_y),
+            stroke="black",
+            stroke_width=3
+        ))
+
+    dwg.save()
+
 
 def render_question(question):
 
